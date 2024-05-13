@@ -7,7 +7,7 @@ import './globals.css'
 const font = Nunito({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Duolingo Clone',
+  title: 'Ducko',
   description: 'Duoling clone next app',
   icons: {
     icon: [
