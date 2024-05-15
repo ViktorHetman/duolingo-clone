@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import React from 'react'
+import { toast } from 'sonner'
 
 import { Card } from './card'
 
@@ -25,7 +26,7 @@ export const List: React.FC<Props> = ({ activeCourseId, courses }) => {
     }
 
     startTransition(() => {
-      upsertUserProgress(id)
+      upsertUserProgress(id).catch(() => toast.error('Something went wrong'))
     })
   }
 
@@ -38,7 +39,7 @@ export const List: React.FC<Props> = ({ activeCourseId, courses }) => {
           title={course.title}
           imageSrc={course.imageSrc}
           onClick={onClick}
-          disabled={false}
+          disabled={pending}
           active={course.id === activeCourseId}
         />
       ))}
