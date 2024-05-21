@@ -6,18 +6,32 @@ import { UserProgress } from '@/components/user-progress'
 import { Header } from './header'
 import { Unit } from './unit'
 
-import { getUnits, getUserProgress } from '@/db/queries'
+import {
+  getCourseProgress,
+  getLessonPercentage,
+  getUnits,
+  getUserProgress
+} from '@/db/queries'
 
 const LearnPage: React.FC = async () => {
   const userProgressPromise = getUserProgress()
+  const coursePogressPromise = getCourseProgress()
+  const lessonPercentagePromise = getLessonPercentage()
   const unitsPromise = getUnits()
 
-  const [userProgress, units] = await Promise.all([
-    userProgressPromise,
-    unitsPromise
-  ])
+  const [userProgress, units, coursePogress, lessonPercentage] =
+    await Promise.all([
+      userProgressPromise,
+      unitsPromise,
+      coursePogressPromise,
+      lessonPercentagePromise
+    ])
 
   if (!userProgress || !userProgress.activeCourse) {
+    redirect('/courses')
+  }
+
+  if (!coursePogress) {
     redirect('/courses')
   }
 
@@ -41,8 +55,8 @@ const LearnPage: React.FC = async () => {
               description={unit.description}
               lessons={unit.lessons}
               title={unit.title}
-              activeLesson={undefined}
-              activeLessonPercentage={0}
+              activeLesson={coursePogress?.activeLesson}
+              activeLessonPercentage={lessonPercentage}
             />
           </div>
         ))}
