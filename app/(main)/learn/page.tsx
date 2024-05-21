@@ -4,13 +4,18 @@ import { FeedWrapper } from '@/components/feed-wrapper'
 import { StickyWrapper } from '@/components/sticky-wrapper'
 import { UserProgress } from '@/components/user-progress'
 import { Header } from './header'
+import { Unit } from './unit'
 
-import { getUserProgress } from '@/db/queries'
+import { getUnits, getUserProgress } from '@/db/queries'
 
 const LearnPage: React.FC = async () => {
   const userProgressPromise = getUserProgress()
+  const unitsPromise = getUnits()
 
-  const [userProgress] = await Promise.all([userProgressPromise])
+  const [userProgress, units] = await Promise.all([
+    userProgressPromise,
+    unitsPromise
+  ])
 
   if (!userProgress || !userProgress.activeCourse) {
     redirect('/courses')
@@ -28,6 +33,19 @@ const LearnPage: React.FC = async () => {
       </StickyWrapper>
       <FeedWrapper>
         <Header title={userProgress.activeCourse.title} />
+        {units.map(unit => (
+          <div key={unit.id} className='mb-10'>
+            <Unit
+              id={unit.id}
+              order={unit.order}
+              description={unit.description}
+              lessons={unit.lessons}
+              title={unit.title}
+              activeLesson={undefined}
+              activeLessonPercentage={0}
+            />
+          </div>
+        ))}
       </FeedWrapper>
     </div>
   )
